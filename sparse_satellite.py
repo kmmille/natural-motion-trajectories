@@ -50,8 +50,15 @@ D = np.array([[0, 0, 0],
               [0, 0, 0]])
 
 # Initial state
-x = 1000 # [m]
-x0 = np.array([[x],  # x
+x0 = np.array([[1000],  # x
+               [0],  # y
+               [0],  # z
+               [0],  # xdot
+               [0],  # ydot
+               [0]]) # zdot
+
+# Final state
+xT = np.array([[0],  # x
                [0],  # y
                [0],  # z
                [0],  # xdot
@@ -82,7 +89,8 @@ Zeta = np.matmul((Ad**n),x0)
 
 x = cp.Variable((n*3, 1))
 cost = cp.norm(x, 1)
-prob = cp.Problem(cp.Minimize(cost), [cp.matmul(Phi, x) == Zeta])
+prob = cp.Problem(cp.Minimize(cost), [cp.matmul(Phi, x) + Zeta == xT])
 prob.solve()
 
 print(x.value)
+print(cost.value)
